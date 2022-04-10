@@ -30,16 +30,6 @@
 
 
 
-
-// Thanks for the following to "Thinker" on 
-// http://www.thinkwiki.org/wiki/Talk:ACPI_fan_control_script
-
-
-
-
-
-
-
 //-------------------------------------------------------------------------
 //  switch fan according to settings
 //-------------------------------------------------------------------------
@@ -98,9 +88,9 @@ FANCONTROL::HandleData(void) {
 
 	// title string (for minimized window)
 	if (Fahrenheit)
-		sprintf_s(title2, sizeof(title2), "%d° F", this->MaxTemp * 9 / 5 + 32);
+		sprintf_s(title2, sizeof(title2), "%dï¿½ F", this->MaxTemp * 9 / 5 + 32);
 	else
-		sprintf_s(title2, sizeof(title2), "%d° C", this->MaxTemp);
+		sprintf_s(title2, sizeof(title2), "%dï¿½ C", this->MaxTemp);
 
 
 	// display fan state
@@ -158,9 +148,9 @@ FANCONTROL::HandleData(void) {
 
 	// display temperature list
 	if (Fahrenheit)
-		sprintf_s(obuf2, sizeof(obuf2), "%d° F", this->MaxTemp * 9 / 5 + 32);
+		sprintf_s(obuf2, sizeof(obuf2), "%dï¿½ F", this->MaxTemp * 9 / 5 + 32);
 	else
-		sprintf_s(obuf2, sizeof(obuf2), "%d° C", this->MaxTemp);
+		sprintf_s(obuf2, sizeof(obuf2), "%dï¿½ C", this->MaxTemp);
 	::SetDlgItemText(this->hwndDialog, 8103, obuf2);
 
 
@@ -170,9 +160,9 @@ FANCONTROL::HandleData(void) {
 
 		if (temp < 128 && temp != 0) {
 			if (Fahrenheit)
-				sprintf_s(obuf2, sizeof(obuf2), "%d° F", temp * 9 / 5 + 32);
+				sprintf_s(obuf2, sizeof(obuf2), "%dï¿½ F", temp * 9 / 5 + 32);
 			else
-				sprintf_s(obuf2, sizeof(obuf2), "%d° C", temp);
+				sprintf_s(obuf2, sizeof(obuf2), "%dï¿½ C", temp);
 
 			if (SlimDialog && StayOnTop)
 				sprintf_s(templist2 + strlen(templist2), sizeof(templist2) - strlen(templist2), "%d %s %s", i + 1,
@@ -237,10 +227,10 @@ FANCONTROL::HandleData(void) {
 	}
 	templist[strlen(templist) - 1] = '\0';
 	if (Fahrenheit)
-		sprintf_s(CurrentStatus, sizeof(CurrentStatus), "Fan: 0x%02x / Switch: %d° F (%s)", State.FanCtrl,
+		sprintf_s(CurrentStatus, sizeof(CurrentStatus), "Fan: 0x%02x / Switch: %dï¿½ F (%s)", State.FanCtrl,
 			MaxTemp * 9 / 5 + 32, templist);
 	else
-		sprintf_s(CurrentStatus, sizeof(CurrentStatus), "Fan: 0x%02x / Switch: %d° C (%s)", State.FanCtrl, MaxTemp,
+		sprintf_s(CurrentStatus, sizeof(CurrentStatus), "Fan: 0x%02x / Switch: %dï¿½ C (%s)", State.FanCtrl, MaxTemp,
 			templist);
 
 	// display fan speed (experimental, not visible)
@@ -362,9 +352,6 @@ FANCONTROL::SmartControl(void) {
 		fanctrl = 0;
 	}
 
-	//	check for fan-up, end marker for smart levels array:
-	//	this->SmartLevels[lcnt].temp= -1;
-	//	this->SmartLevels[lcnt].fan= 0x80;
 
 	for (i = 0; this->SmartLevels[i].temp != -1; i++) {
 		if (this->MaxTemp >= this->SmartLevels[i].temp && this->SmartLevels[i].fan >= fanctrl)
@@ -385,7 +372,6 @@ FANCONTROL::SmartControl(void) {
 	// fan speed needs change?
 
 	if (newfanctrl != -1 && newfanctrl != this->State.FanCtrl) {
-		//TODO: Daten für Graph sammeln
 		//if (newfanctrl==0x80) { // switch to BIOS-auto mode
 		//	//this->ModeToDialog(1); // bios
 		//}
@@ -566,9 +552,9 @@ int
 FANCONTROL::ReadEcStatus(FCSTATE* pfcstate) {
 	DWORD ok = 0, rc = 0;
 
-	FCSTATE sample;  //Änderung "{0, }" wg. fanspeed transient zero
+	FCSTATE sample;  //ï¿½nderung "{0, }" wg. fanspeed transient zero
 
-//	setzero(pfcstate, sizeof(*pfcstate)); //Änderung // wg. fanspeed transient zero
+//	setzero(pfcstate, sizeof(*pfcstate)); //ï¿½nderung // wg. fanspeed transient zero
 
 
 	// reading from the EC seems to yield erratic results at times (probably

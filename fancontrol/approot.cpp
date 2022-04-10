@@ -1,4 +1,3 @@
-
 #include "_prec.h"
 #include "approot.h"
 #include "fancontrol.h"
@@ -80,7 +79,7 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE, LPSTR aArgs, int)
 		}
 		if (run)
 		{
-			//	???		HANDLE hLockS = CreateMutex(NULL,FALSE,"TPFanControlMutex02");
+			// HANDLE hLockS = CreateMutex(NULL,FALSE,"TPFanControlMutex02");
 			SERVICE_TABLE_ENTRY svcEntry[2];
 			svcEntry[0].lpServiceName = g_ServiceName;
 			svcEntry[0].lpServiceProc = ServiceMain;
@@ -244,9 +243,7 @@ void StopWorkerThread()
 
 void WorkerThread(void* dummy)
 {
-	char curdir[MAX_PATH] = "";
-
-	//Zeit, um den Debugger an den Prozess zu hängen
+	char curdir[MAX_PATH]= "";
 	//   #ifdef _DEBUG   
 	//   Sleep(30000);
 	//   #endif
@@ -274,12 +271,7 @@ void WorkerThread(void* dummy)
 		}
 	}
 
-	// 
-	// Get going ...
-	//
-	// TVicPort driver (http://www.entechtaiwan.com/dev/port/index.shtm)
-
-	bool ok = false;
+  bool ok = false;
 	bool HardAccess = false;
 	bool NewHardAccess = true;
 
