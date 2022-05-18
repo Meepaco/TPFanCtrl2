@@ -36,3 +36,10 @@
 
 ## Debugging folder
 *Debug/
+
+
+.git
+.github
+.idea
+.vs
+gitignore

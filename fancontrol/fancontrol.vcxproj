@@ -197,6 +197,7 @@
     <ResourceCompile Include="res\fancontrol.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\TPFCIcon\TPFCIcon.sln" />
     <None Include="res\resource" />
   </ItemGroup>
   <ItemGroup>

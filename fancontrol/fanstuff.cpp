@@ -53,6 +53,7 @@ FANCONTROL::HandleData(void) {
 			list[i] = '|';
 	}
 
+	bool coolingDown = false; // for retaining temp after it is hit, avoid rapid fan switching
 	maxtemp = 0;
 	imaxtemp = 0;
 	int senstemp;
@@ -63,6 +64,52 @@ FANCONTROL::HandleData(void) {
 		if (this->State.Sensors[i] != 0x80 && this - State.Sensors[i] != 0x00 && strstr(list, what) == 0) {
 			int isens = this->State.Sensors[i];
 			int ioffs = this->SensorOffset[i];
+			int originalOfset = ioffs;
+
+			if (i == 1) { // 1 is aps sensor
+			/* Background: aps (gpu) is limited to 74c, -10c offset. Want to ramp to avoid gpu throttling, but don't want loud fans elsewhere
+			   Only prioritize aps temp when it throttles, else "ignore" offset value.
+			*  Yes, this is a small brain band-aid fix infested with hard coded values. I'm sorry.
+			*/
+				int calcTemp = isens - originalOfset;
+
+
+				if (calcTemp >= 84)
+					ioffs = originalOfset;
+
+				else if (calcTemp > 84)
+					coolingDown = true;
+
+				else if (calcTemp >= 71) {
+					if (coolingDown) { // 
+						switch (calcTemp) {
+						case 73:
+							ioffs = -12;
+							break;
+						case 72:
+							ioffs = -13;
+							break;
+						case 71:
+							ioffs = -14;
+							break;
+						}
+					}
+				}
+
+				else if (calcTemp < 71) {
+					coolingDown = false;
+					ioffs = 0;
+				}
+				else if (calcTemp > 55)
+					ioffs = 0;
+           
+                else 
+					ioffs = -4;
+				/* stop fans via temp threshold when complete idle, but keeps fans running
+					 to avoid pulsating under load because gpu is sucking power */
+            }
+
+
 
 			if (ShowBiasedTemps)
 				senstemp = isens;
