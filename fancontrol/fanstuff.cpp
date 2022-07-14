@@ -53,7 +53,16 @@ FANCONTROL::HandleData(void) {
 			list[i] = '|';
 	}
 
-	bool coolingDown = false; // for retaining temp after it is hit, avoid rapid fan switching
+	static bool coolingDown; // for retaining temp after it is hit, avoid rapid fan switching
+	//int	cdThrehold; // what temp to stop cooldown
+	//int aSensor; // sensor number
+
+	//int upperThrehold; // max temp before use original offset
+	//int midthrehold; // temp to remove offset (offset = 0)
+	//int lowerTheshold; // temp to use lower theshold value
+
+
+
 	maxtemp = 0;
 	imaxtemp = 0;
 	int senstemp;
@@ -64,7 +73,7 @@ FANCONTROL::HandleData(void) {
 		if (this->State.Sensors[i] != 0x80 && this - State.Sensors[i] != 0x00 && strstr(list, what) == 0) {
 			int isens = this->State.Sensors[i];
 			int ioffs = this->SensorOffset[i];
-			int originalOfset = ioffs;
+			int originalOfset = -10; // want to read value from config
 
 			if (i == 1) { // 1 is aps sensor
 			/* Background: aps (gpu) is limited to 74c, -10c offset. Want to ramp to avoid gpu throttling, but don't want loud fans elsewhere
@@ -73,38 +82,40 @@ FANCONTROL::HandleData(void) {
 			*/
 				int calcTemp = isens - originalOfset;
 
-
-				if (calcTemp >= 84)
-					ioffs = originalOfset;
-
-				else if (calcTemp > 84)
-					coolingDown = true;
-
-				else if (calcTemp >= 71) {
-					if (coolingDown) { // 
-						switch (calcTemp) {
-						case 73:
-							ioffs = -12;
-							break;
-						case 72:
-							ioffs = -13;
-							break;
-						case 71:
-							ioffs = -14;
-							break;
-						}
-					}
-				}
-
-				else if (calcTemp < 71) {
+				if (calcTemp < 71) { // force offset to die
 					coolingDown = false;
 					ioffs = 0;
 				}
-				else if (calcTemp > 55)
+
+				if (calcTemp >= 84) {
+					ioffs = originalOfset;
+					coolingDown = true;
+				}
+
+
+				else if (coolingDown == true) {
+	
+					switch (calcTemp) {
+					case 73:
+						ioffs = -12;
+						break;
+					case 72:
+						ioffs = -13;
+						break;
+					case 71:
+						ioffs = -14;
+						break;
+					}
+				}
+
+				
+				else if (calcTemp > 55) {
 					ioffs = 0;
+				}
            
-                else 
-					ioffs = -4;
+				else {
+					ioffs = -7;
+				}
 				/* stop fans via temp threshold when complete idle, but keeps fans running
 					 to avoid pulsating under load because gpu is sucking power */
             }
