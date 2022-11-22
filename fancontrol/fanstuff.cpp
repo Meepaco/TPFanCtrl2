@@ -68,7 +68,7 @@ FANCONTROL::HandleData(void) {
 			if (UseApsCooldown >= 0 && i == UseApsCooldown) {
 				int calcTemp = isens - SensorOffset[UseApsCooldown];
 				
-				if (calcTemp < ApsCdCutoff) { // cutoff
+				if (isens < ApsCdCutoff) { // cutoff
 					coolingDown = false;
 					ioffs = 0;
 				}
