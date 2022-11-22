@@ -67,6 +67,28 @@ FANCONTROL::ReadConfig(const char* configfile)
 				this->ActiveMode = atoi(buf + 7);
 			}
 			else
+				if (_strnicmp(buf, "UseApsCooldown=", 15) == 0) {
+					this->UseApsCooldown = atoi(buf + 15);
+				}
+				else
+					if (_strnicmp(buf, "ApsCdLow=", 9) == 0) {
+						this->ApsCdLow = atoi(buf + 9);
+					}
+					else
+						if (_strnicmp(buf, "ApsCdLowOffs=", 13) == 0) {
+							this->ApsCdLowOffs = atoi(buf + 13);
+						}
+						else
+							if (_strnicmp(buf, "ApsTriggerTemp=", 15) == 0) {
+								this->ApsTriggerTemp = atoi(buf + 15);
+							}
+							else
+								if (_strnicmp(buf, "ApsCdCutoff=", 12) == 0) {
+									this->ApsCdCutoff = atoi(buf + 12);
+								}
+								else
+
+
 				if (_strnicmp(buf, "ManFanSpeed=", 12) == 0) {
 					this->ManFanSpeed = atoi(buf + 12);
 				}
@@ -414,6 +436,17 @@ FANCONTROL::ReadConfig(const char* configfile)
 																																																																										else
 																																																																											if (_strnicmp(buf, "SensorOffset16=", 15) == 0)
 																																																																												this->SensorOffset[15] = atoi(buf + 15);
+																																																																											
+
+																																																																												
+
+
+																																																																																
+																																																																																
+
+
+
+																																																																											
 
 			// End of Reading Sensor Offsets
 
@@ -430,7 +463,7 @@ FANCONTROL::ReadConfig(const char* configfile)
 																																																																												}
 		}
 
-
+		
 		fclose(f);
 
 		if (this->StayOnTop)

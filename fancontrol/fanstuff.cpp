@@ -53,16 +53,7 @@ FANCONTROL::HandleData(void) {
 			list[i] = '|';
 	}
 
-	static bool coolingDown; // for retaining temp after it is hit, avoid rapid fan switching
-	//int	cdThrehold; // what temp to stop cooldown
-	//int aSensor; // sensor number
-
-	//int upperThrehold; // max temp before use original offset
-	//int midthrehold; // temp to remove offset (offset = 0)
-	//int lowerTheshold; // temp to use lower theshold value
-
-
-
+	static bool coolingDown; // enable cooldown state
 	maxtemp = 0;
 	imaxtemp = 0;
 	int senstemp;
@@ -73,51 +64,27 @@ FANCONTROL::HandleData(void) {
 		if (this->State.Sensors[i] != 0x80 && this - State.Sensors[i] != 0x00 && strstr(list, what) == 0) {
 			int isens = this->State.Sensors[i];
 			int ioffs = this->SensorOffset[i];
-			int originalOfset = -10; // want to read value from config
 
-			if (i == 1) { // 1 is aps sensor
-			/* Background: aps (gpu) is limited to 74c, -10c offset. Want to ramp to avoid gpu throttling, but don't want loud fans elsewhere
-			   Only prioritize aps temp when it throttles, else "ignore" offset value.
-			*  Yes, this is a small brain band-aid fix infested with hard coded values. I'm sorry.
-			*/
-				int calcTemp = isens - originalOfset;
-
-				if (calcTemp < 71) { // force offset to die
+			if (UseApsCooldown >= 0 && i == UseApsCooldown) {
+				int calcTemp = isens - SensorOffset[UseApsCooldown];
+				
+				if (calcTemp < ApsCdCutoff) { // cutoff
 					coolingDown = false;
 					ioffs = 0;
 				}
 
-				if (calcTemp >= 84) {
-					ioffs = originalOfset;
+				if (calcTemp >= ApsTriggerTemp) {
+					ioffs = SensorOffset[UseApsCooldown];
 					coolingDown = true;
 				}
-
-
 				else if (coolingDown == true) {
-	
-					switch (calcTemp) {
-					case 73:
-						ioffs = -12;
-						break;
-					case 72:
-						ioffs = -13;
-						break;
-					case 71:
-						ioffs = -14;
-						break;
-					}
+					// hold fake temp
+					ioffs = isens - ApsTriggerTemp;
 				}
-
-				
-				else if (calcTemp > 55) {
-					ioffs = 0;
+				else if (calcTemp < ApsCdLow) {
+					ioffs = -ApsCdLowOffs;
+					// negative offsets may not work properly
 				}
-           
-				else {
-					ioffs = -7;
-				}
-				/* stop fans via temp threshold when complete idle, but keeps fans running
-					 to avoid pulsating under load because gpu is sucking power */
             }
 
 
