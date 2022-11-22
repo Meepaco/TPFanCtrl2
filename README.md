@@ -1,11 +1,11 @@
 # TPFanCtrl2 <img src="https://raw.githubusercontent.com/Shuzhengz/TPFanCtrl2/main/fancontrol/res/app.ico" alt = "App Icon" width = "30"/>
 
-ThinkPad Fan Control 2, a fan control utility software for ThinkPad users running Windows 10/11
+ThinkPad Fan Control 2, a fan control utility for ThinkPad users running Windows 10/11
 
 ## About
 This is a fork of the [fork of the orginal TPFC](https://github.com/Shuzhengz/TPFanCtrl2), adapted to my preferences for X1E 2nd. It is not recommended to use this over the original fork.  
 
-This is a fork of the [original TPFC](https://github.com/ThinkPad-Forum/TPFanControl/tree/master/fancontrol), and is based on [byrnes' dual fan mod](https://github.com/byrnes/TPFanControl). It's updated it to work with two fan devices, such as the X1 Extreme. This has only been tested on X1 Extreme Gen. 1, but it should work on any other dual-fan Thinkpads that are released. The default fan profile that is included is a silent one, with the fans only coming on at 60c. This can be changed by editing tpfancontrol.ini in the fancontrol/Debug.
+This is a fork of the [original TPFC](https://github.com/ThinkPad-Forum/TPFanControl/tree/master/fancontrol), and is based on [byrnes' dual fan mod](https://github.com/byrnes/TPFanControl). It's updated it to work with two fan devices. It has only been tested on X1 Extreme Gen. 1 and P1 Gen. 4, but it should work on most other dual-fan Thinkpads that are released. The default fan profile is a silent one, with the fans only coming on at 60c. This can be changed by editing tpfancontrol.ini.
 
 Visual Studio 2022 Community was used to build and debug. A release build is in the works
 
@@ -20,7 +20,7 @@ To avoid errors, either install [tvicport](https://www.entechtaiwan.com/dev/port
 
 Administration permission is required for the program to be able to control system fan speed.
 
-Windows 10 is required to run the program. Windows 11 is currently untested and unsupported, but should theoretically be compatible.
+Windows 10 or 11 is required to run the program.
 
 
 ## Configuring
@@ -52,7 +52,9 @@ Example of configurable parameters:
 | 6 - 65% |
 | 7 - 65% |
 
-<h5>Advanced level value is converted into hex (i.e. 70 is 0x46), the value above is a rough estimate of what to expect</h5>
+<h5>Advanced level value is converted into hex, the value above is a rough estimate of what to expect</h5>
+
+<h5>The 0-7 range is intended to be used as the fan levels intended by the manufacture (7 being the highest that the laptop BIOS can go), and to take full advantage of the fan you'll need to enter 0-128 in hex (for example, 128 in hex is 0x80, which is entered as 80).</h5>
 
 ### Additional Information
 
@@ -69,6 +71,14 @@ The project currently builds with the configuration: `Debug` `Win32` (You will n
 
 Do not build the project without TPFCIcon and TPFCIcon_noballons, they are necessary parts of the application and the main fan control software will not function without them
 
+The source code of spinoff releases of the program (i.e. 2.1.5 B) for different machines are stored within the archive direcotry, you can build them by subsituting the main fancontrol directory with the fancontrol directory of the desiered version. Note that TPFCIcon and TPFCIcon_noballons should stay the same for every release.
+
+### Note
+
+If you get Linker Tools Error LNK2026: module unsafe for SAFESEH image when building:
+
+- Go to Project properties -> Configuration Properties -> Linker -> Advanced
+- Disable option `Image has Safe Exception Handlers` (No (/SAFESEH:NO)
 
 ## Running at startup (Not Recommended)
 
@@ -92,11 +102,25 @@ If you added the program to run at startup, you will have to also delete the sho
 
 ## Known Issues
 
+On single-fan devices, the fan speed will sometimes fail to show up. The problem is in the process of being fixed
+
 Sometimes the fans will fail to sync, with one ramping up and the other not.
 This will usually fix itself, but to fix it manually, switch to BIOS mode, then switch back to the desired mode
 
 It will also sometimes take a longer time for the speed to update and the fans to spin up.
 This is caused by EC management for the newer ThinkPad BIOS. There is currently no way around it.
+
+### ThinkPad P50
+
+P50 Laptop users should use the 2.1.5B release as the fan control parameters are different, but the temperature is currently broken in the build, so it is recommended to use it in manual mode only
+
+### Thinkbooks
+
+Some thinkbook models have different EC address, so the program might not work
+
+### Contributing
+
+Please open a pull request and have at lease one review to merge it into main
 
 ## License
 This program has an Unlicense license
