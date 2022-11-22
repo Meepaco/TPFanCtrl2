@@ -3,7 +3,7 @@
 ThinkPad Fan Control 2, a fan control utility for ThinkPad users running Windows 10/11
 
 ## Notable Changes
-This is a fork of the [fork of the orginal TPFC](https://github.com/Shuzhengz/TPFanCtrl2), adapted to mitigate aps (gpu) throttling, and reduce pulsating fans on idle when the gpu is in use. Tested on X1 Extreme 2nd Generation, `TPFanControl.ini` has been updated with configurable options and defaults tuned for this laptop. This will not fix Lenovo's abysmal thermal issues, undervolting/underclocking can help with that. 
+This is a fork of the [fork of the orginal TPFC](https://github.com/Shuzhengz/TPFanCtrl2), adapted to mitigate APS (GPU) throttling, and reduce pulsating fans on idle when the GPU is active. Tested on X1 Extreme Gen. 2, `TPFanControl.ini` has been updated with configurable options and defaults tuned for this laptop. This will not fix Lenovo's abysmal thermal issues, undervolting/underclocking can help with that. 
 
 ## About
 This is a fork of the [original TPFC](https://github.com/ThinkPad-Forum/TPFanControl/tree/master/fancontrol), and is based on [byrnes' dual fan mod](https://github.com/byrnes/TPFanControl). It's updated it to work with two fan devices. It has only been tested on X1 Extreme Gen. 1 and P1 Gen. 4, but it should work on most other dual-fan Thinkpads that are released. The default fan profile is a silent one, with the fans only coming on at 60c. This can be changed by editing tpfancontrol.ini.
