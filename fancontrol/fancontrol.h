@@ -167,6 +167,8 @@ protected:
 	int ApsTriggerTemp;
 	int ApsCdLowOffs;
 
+	bool coolingDown; // enable cooldown state
+
 	HANDLE hThread;
 	HANDLE hPipe0;
 	HANDLE hPipe1;

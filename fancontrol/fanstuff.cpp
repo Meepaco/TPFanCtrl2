@@ -53,7 +53,6 @@ FANCONTROL::HandleData(void) {
 			list[i] = '|';
 	}
 
-	static bool coolingDown; // enable cooldown state
 	maxtemp = 0;
 	imaxtemp = 0;
 	int senstemp;
