@@ -159,6 +159,16 @@ protected:
 	char IgnoreSensors[256];
 	char MenuLabelSM1[32];
 	char MenuLabelSM2[32];
+
+	int UseApsCooldown;
+	int ApsCdCutoff;
+
+	int ApsCdLow;
+	int ApsTriggerTemp;
+	int ApsCdLowOffs;
+
+	bool coolingDown; // enable cooldown state
+
 	HANDLE hThread;
 	HANDLE hPipe0;
 	HANDLE hPipe1;

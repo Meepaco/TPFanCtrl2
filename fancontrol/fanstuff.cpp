@@ -64,6 +64,30 @@ FANCONTROL::HandleData(void) {
 			int isens = this->State.Sensors[i];
 			int ioffs = this->SensorOffset[i];
 
+			if (UseApsCooldown >= 0 && i == UseApsCooldown) {
+				int calcTemp = isens - SensorOffset[i];
+				
+				if (isens < ApsCdCutoff) { // cutoff
+					coolingDown = false;
+					ioffs = 0;
+				}
+
+				if (calcTemp >= ApsTriggerTemp) {
+					ioffs = SensorOffset[i];
+					coolingDown = true;
+				}
+				else if (coolingDown == true) {
+					// hold fake temp
+					ioffs = isens - ApsTriggerTemp;
+				}
+				else if (calcTemp < ApsCdLow) {
+					ioffs = -ApsCdLowOffs;
+					// negative offsets may not work properly
+				}
+            }
+
+
+
 			if (ShowBiasedTemps)
 				senstemp = isens;
 			else
